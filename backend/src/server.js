@@ -1,3 +1,5 @@
+process.removeAllListeners('warning');
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -5,6 +7,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const databaseConfig = require('../config/databaseConfig');
 const routesConfig = require('../config/routesConfig');
+const authRoutes = require('../routes/authRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,7 +21,6 @@ mongoose.connect(databaseConfig.uri, databaseConfig.options)
 
 // Routes
 const emailSequenceRoutes = require('../routes/emailSequenceRoutes');
-const authRoutes = require('../routes/authRoutes');
 
 app.use(routesConfig.emailSequencePrefix, emailSequenceRoutes);
 app.use(routesConfig.authPrefix, authRoutes);

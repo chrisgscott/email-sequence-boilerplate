@@ -1,20 +1,41 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
-function Header() {
+function Header({ isAuthenticated, logout }) {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Email Sequence Generator
         </Typography>
-        <Button color="inherit" component={Link} to="/">Home</Button>
-        <Button color="inherit" component={Link} to="/login">Login</Button>
-        <Button color="inherit" component={Link} to="/register">Register</Button>
+        <Box>
+          <Button color="inherit" component={RouterLink} to="/">
+            Home
+          </Button>
+          {isAuthenticated ? (
+            <>
+              <Button color="inherit" component={RouterLink} to="/dashboard">
+                Dashboard
+              </Button>
+              <Button color="inherit" onClick={logout}>
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button color="inherit" component={RouterLink} to="/login">
+                Login
+              </Button>
+              <Button color="inherit" component={RouterLink} to="/register">
+                Register
+              </Button>
+            </>
+          )}
+        </Box>
       </Toolbar>
     </AppBar>
   );
 }
 
-export default Header;
+export default React.memo(Header);

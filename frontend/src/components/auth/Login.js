@@ -11,6 +11,8 @@ function Login() {
     console.log('Login attempt with:', { email, password });
   };
 
+  const encodedPassword = encodeURIComponent(password);
+
   return (
     <Container maxWidth="xs">
       <Typography variant="h4" align="center" gutterBottom>

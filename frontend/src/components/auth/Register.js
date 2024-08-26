@@ -1,34 +1,37 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Container, Alert } from '@mui/material';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Typography, Container } from '@mui/material';
 
-function Login({ login }) {
+function Register() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
-    try {
-      const response = await axios.post('/api/auth/login', { email, password });
-      localStorage.setItem('token', response.data.token);
-      login();
-      navigate('/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.message || 'An error occurred during login');
-    }
+    // TODO: Implement registration logic
+    const encodedPassword = encodeURIComponent(password);
+    console.log('Registration attempt with:', { name, email, password: encodedPassword });
   };
 
   return (
     <Container maxWidth="xs">
       <Typography variant="h4" align="center" gutterBottom>
-        Login
+        Register
       </Typography>
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
       <form onSubmit={handleSubmit}>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="name"
+          label="Full Name"
+          name="name"
+          autoComplete="name"
+          autoFocus
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <TextField
           variant="outlined"
           margin="normal"
@@ -38,7 +41,6 @@ function Login({ login }) {
           label="Email Address"
           name="email"
           autoComplete="email"
-          autoFocus
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -51,7 +53,7 @@ function Login({ login }) {
           label="Password"
           type="password"
           id="password"
-          autoComplete="current-password"
+          autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -62,11 +64,11 @@ function Login({ login }) {
           color="primary"
           sx={{ mt: 3, mb: 2 }}
         >
-          Sign In
+          Register
         </Button>
       </form>
     </Container>
   );
 }
 
-export default Login;
+export default Register;
