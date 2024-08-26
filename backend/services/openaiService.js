@@ -1,17 +1,16 @@
-const { Configuration, OpenAIApi } = require("openai");
+const OpenAI = require("openai");
 const emailConfig = require("../config/emailSequenceConfig");
 const openaiConfig = require("../config/openaiConfig");
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 exports.generateEmailSequence = async (topic, inputs) => {
   const prompt = emailConfig.promptTemplate(topic, inputs, emailConfig);
 
   try {
-    const response = await openai.createChatCompletion({
+    const chatCompletion = await openai.chat.completions.create({
       model: openaiConfig.model,
       messages: [
         { role: "system", content: openaiConfig.systemMessage },
@@ -20,11 +19,11 @@ exports.generateEmailSequence = async (topic, inputs) => {
       max_tokens: openaiConfig.maxTokens,
     });
 
-    if (!response.data.choices || response.data.choices.length === 0) {
+    if (!chatCompletion.choices || chatCompletion.choices.length === 0) {
       throw new Error('No response from OpenAI API');
     }
 
-    return JSON.parse(response.data.choices[0].message.content);
+    return JSON.parse(chatCompletion.choices[0].message.content);
   } catch (error) {
     console.error('Error generating email sequence:', error);
     if (error.response) {
