@@ -2,14 +2,19 @@ const Sequence = require('../models/sequence');
 
 exports.createSequence = async (req, res) => {
   try {
+    const { name } = req.body;
+    if (!name) {
+      return res.status(400).json({ message: 'Sequence name is required' });
+    }
     const sequence = new Sequence({
-      name: req.body.name,
+      name,
       user: req.user._id
     });
     await sequence.save();
     res.status(201).json(sequence);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Error creating sequence:', error);
+    res.status(500).json({ message: 'Error creating sequence', error: error.message });
   }
 };
 
