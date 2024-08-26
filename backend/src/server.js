@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 const databaseConfig = require('../config/databaseConfig');
 const routesConfig = require('../config/routesConfig');
 const authRoutes = require('../routes/authRoutes');
+const sequenceController = require('./controllers/sequenceController');
+const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,6 +26,11 @@ const emailSequenceRoutes = require('../routes/emailSequenceRoutes');
 
 app.use(routesConfig.emailSequencePrefix, emailSequenceRoutes);
 app.use(routesConfig.authPrefix, authRoutes);
+
+// Sequence routes
+app.post('/api/sequences', authMiddleware, sequenceController.createSequence);
+app.get('/api/sequences', authMiddleware, sequenceController.getSequences);
+app.delete('/api/sequences/:id', authMiddleware, sequenceController.deleteSequence);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
